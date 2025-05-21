@@ -4,15 +4,16 @@ import { useEffect, useRef } from 'react';
 import { ChatMessage } from './chat-message';
 import { ChatInput } from './chat-input';
 import { useChat } from './chat-context';
+import { TypingIndicator } from './typing-indicator';
 
 export function Chat() {
-  const { messages, error } = useChat();
+  const { messages, error, isLoading } = useChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to bottom when messages change
+  // Scroll to bottom when messages change or when loading state changes
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, isLoading]);
 
   return (
     <div className="flex flex-col h-full bg-white overflow-hidden shadow-lg">
@@ -51,6 +52,7 @@ export function Chat() {
             {messages.map((message) => (
               <ChatMessage key={message.id} message={message} />
             ))}
+            {isLoading && <TypingIndicator />}
           </>
         )}
         
