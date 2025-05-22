@@ -5,10 +5,17 @@ import { ChatMessage } from './chat-message';
 import { ChatInput } from './chat-input';
 import { useChat } from './chat-context';
 import { TypingIndicator } from './typing-indicator';
+import { CancelLoading } from '../visualizations/cancel-loading';
 
 export function Chat() {
   const { messages, error, isLoading } = useChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  // Check for cancel trends query in last message
+  const isCancelTrendsQuery = messages.length > 0 && 
+    messages[messages.length - 1].role === 'user' && 
+    messages[messages.length - 1].content.toLowerCase().includes('cancel trends') && 
+    messages[messages.length - 1].content.toLowerCase().includes('6 months');
 
   // Scroll to bottom when messages change or when loading state changes
   useEffect(() => {
@@ -52,7 +59,8 @@ export function Chat() {
             {messages.map((message) => (
               <ChatMessage key={message.id} message={message} />
             ))}
-            {isLoading && <TypingIndicator />}
+            {isLoading && !isCancelTrendsQuery && <TypingIndicator />}
+            {isLoading && isCancelTrendsQuery && <CancelLoading />}
           </>
         )}
         

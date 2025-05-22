@@ -7,7 +7,7 @@ import { useChat } from './chat-context';
 
 export function ChatInput() {
   const [input, setInput] = useState('');
-  const { sendMessage, isLoading } = useChat();
+  const { sendMessage, handleSpecialQuery, isLoading } = useChat();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -16,6 +16,15 @@ export function ChatInput() {
     
     const message = input;
     setInput('');
+    
+    // Check for exact match with the cancel trends query
+    if (message.toLowerCase().includes('cancel trends') && message.toLowerCase().includes('6 months')) {
+      console.log("Detected cancel trends query!");
+      handleSpecialQuery(message);
+      return;
+    }
+    
+    // Regular query handling
     await sendMessage(message);
   };
 

@@ -77,11 +77,16 @@ const config = {
             opacity: "1" 
           }
         },
+        "growUp": {
+          from: { height: "0%" },
+          to: { height: "var(--chart-height)" }
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "typing-dot": "typing-dot 1.4s infinite ease-in-out",
+        "growUp": "growUp 1s ease-out forwards",
       },
     },
   },

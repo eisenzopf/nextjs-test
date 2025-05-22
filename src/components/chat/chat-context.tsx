@@ -19,6 +19,7 @@ interface ChatContextProps {
   currentChatId: string | null;
   addMessage: (content: string, role: 'user' | 'model') => void;
   sendMessage: (content: string) => Promise<void>;
+  handleSpecialQuery: (content: string) => boolean;
   isLoading: boolean;
   error: string | null;
   clearChat: () => void;
@@ -103,6 +104,31 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         chat.title,
       messages: [...chat.messages, newMessage]
     }));
+    
+    return newMessage;
+  };
+
+  // Handle special visualization queries
+  const handleSpecialQuery = (content: string): boolean => {
+    console.log("handleSpecialQuery called with:", content);
+    
+    // Add user message
+    addMessage(content, 'user');
+    
+    // Set loading state
+    setIsLoading(true);
+    
+    console.log("Starting special query timer");
+    
+    // Show progress for 4 seconds then display results
+    setTimeout(() => {
+      console.log("Adding model response for cancel trends");
+      addMessage("Here's the cancel trends data for the past 6 months:", 'model');
+      setIsLoading(false);
+      console.log("Loading state set to false");
+    }, 4000);
+    
+    return true;
   };
 
   const sendMessage = async (content: string) => {
@@ -172,6 +198,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         currentChatId,
         addMessage,
         sendMessage,
+        handleSpecialQuery,
         isLoading,
         error,
         clearChat,
